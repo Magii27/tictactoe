@@ -9,11 +9,9 @@ ldaten = len(daten)
 testdaten = input("hier: ")
 
 nummer = 0
-
 poszug = 2
-zug = 3
+zug = 2
 buchstabe = ""
-string = "hi"
 while poszug < 10:
 
     for x in daten:
@@ -58,8 +56,8 @@ while poszug < 10:
                         string = x
                         posarray = nummer
 
-    nächsterzug = string[zug:zug + 1]
-    zug += 4
+    nächsterzug = string[(zug + (zug - 1)):(zug + zug)]
+    zug += 2
     print("String: ", string)
     print("Arraynr: ", posarray)
     print("Buchstabe: ", buchstabe)
