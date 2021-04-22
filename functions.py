@@ -37,17 +37,87 @@ def isclear(field, input):
         return False
 
 
-def random(field):
+def random(field, array_s, input, move):
 
     nummer = 1
     array = []
-
+    string_array = []
+    if input != "":
+        for x in array_s:
+            if input in x[0:move * 2]:
+                string_array.append(x[move*2+3:move*2+4])
+                # print("String: ", x)
+                # print(string_array)
     for x in field:
-        if field[nummer] != (color.BOLD + color.RED + "X" + color.END) and field[nummer] != (color.BOLD + color.BLUE + "O" + color.END):
+        if field[nummer] != (color.BOLD + color.RED + "X" + color.END) and field[nummer] != (color.BOLD + color.BLUE + "O" + color.END) and field[nummer] not in string_array:
+            # print("x: ", x)
             array.append(x)
         nummer += 1
-    output = r.sample(array, k=1)
-    return int(output[0])
+    if not array and not string_array:
+        output = 1
+        return output
+    elif not array:
+        array = string_array
+        output = r.sample(array, k=1)
+        return int(output[0])
+    else:
+        output = r.sample(array, k=1)
+        return int(output[0])
+
+
+def searchandersrum(array, input, move):
+    buchstabe = ""
+    nummer = 0
+    string = ""
+    try:
+        for x in array:
+            if input in x[0:move * 2]:
+                if buchstabe == "":
+                    buchstabe = x[x.find(" ") + 1:x.find(" ") + 2]
+                    zahl = x[x.find(" ") + 2:]
+                    string = x
+                    posarray = nummer
+                elif buchstabe == "L":
+                    if x[x.find(" ") + 1:x.find(" ") + 2] == buchstabe:
+                        if x[x.find(" ") + 2:] > zahl:
+                            zahl = x[x.find(" ") + 2:]
+                            string = x
+                            posarray = nummer
+                elif buchstabe == "D":
+                    if x[x.find(" ") + 1: x.find(" ") + 2] == "L":
+                        zahl = x[x.find(" ") + 2:]
+                        buchstabe = "L"
+                        string = x
+                        posarray = nummer
+                    elif x[x.find(" ") + 1: x.find(" ") + 2] == "D":
+                        if x[x.find(" ") + 2:] > zahl:
+                            zahl = x[x.find(" ") + 2:]
+                            string = x
+                            posarray = nummer
+                else:
+                    if x[x.find(" ") + 1: x.find(" ") + 2] == "L":
+                        zahl = x[x.find(" ") + 2:]
+                        buchstabe = "L"
+                        string = x
+                        posarray = nummer
+                    elif x[x.find(" ") + 1: x.find(" ") + 2] == "D":
+                        zahl = x[x.find(" ") + 2:]
+                        buchstabe = "D"
+                        string = x
+                        posarray = nummer
+                    elif x[x.find(" ") + 1: x.find(" ") + 2] == "W":
+                        if x[x.find(" ") + 2:] > zahl:
+                            zahl = x[x.find(" ") + 2:]
+                            string = x
+                            posarray = nummer
+            nummer += 1
+        if string[string.find(" ") + 1: string.find(" ") + 2] == "W" or string == "":
+            return False
+        else:
+            nächsterzug = string[(move + (move - 1)):(move + move)]
+            return nächsterzug
+    except ValueError:
+        return False
 
 
 def search(array, input, move):

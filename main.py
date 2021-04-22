@@ -1,6 +1,7 @@
 import functions as fun
 
 f = open("Daten", "r+")
+fa = open("Daten", "a+")
 daten = f.read().splitlines()
 ldaten = len(daten)
 
@@ -22,7 +23,7 @@ while True:
         print("Bitte such dir einen Spieler aus")
 
 print(fun.board(feldd))
-
+stimmt = 0
 speicher = True
 move = 1
 bot = ""
@@ -57,11 +58,11 @@ while True:
             if speicher is not False:
                 if fun.search(daten, bot, move) is False:
                     speicher = False
-                    zugbot = fun.random(feldd)
+                    zugbot = fun.random(feldd, daten, bot, move)
                 else:
                     zugbot = int(fun.search(daten, bot, move))
             else:
-                zugbot = fun.random(feldd)
+                zugbot = fun.random(feldd, daten, bot, move)
 
             feldd[zugbot] = CurrentP
 
@@ -108,8 +109,11 @@ for x in daten:
         # Die vorherigen Daten in der variable werden wieder in die Datei geschrieben
         for y in daten:
             f.write(y + "\n")
+        stimmt = 1
 
     nummer += 1
 
 # Ergebnis in die Datenbank hinzufügen
-append an file using
+if stimmt != 1:
+    string = bot + " " + ergebnis + "1"
+    fa.write(string + "\n")
